@@ -1,0 +1,19 @@
+##UEFI
+gummiboot
+prebootloader
+refind-efi
+
+# Networking
+rp-pppoe
+wireless_tools
+
+#VB
+virtualbox-guest-utils
+virtualbox-guest-modules
+
+##fonts
+ttf-dejavu
+
+##packages for installer
+hwinfo
+unzip

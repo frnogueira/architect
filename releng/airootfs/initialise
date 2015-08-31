@@ -1,0 +1,53 @@
+# !/bin/bash
+#
+# ArchAngel Network Configuration script (version 1.0 - August 2015)
+#
+# Written by Carl Duff
+#
+# This script will detect and configure network connections before
+# downloading and executing the latest version of the installer from github.
+#
+# This program is free software, provided under the GNU General Public License
+# as published by the Free Software Foundation. So feel free to copy, distribute,
+# or modify it as you wish.
+#
+
+VERSION="ArchAngel Network Configuration 1.0"
+
+# Check user is root, and that there is an active internet connection
+# Seperated the checks into seperate "if" statements for readability.
+# User then has option of the Stable or Development version of the installer.
+	
+  dialog --backtitle "$VERSION" --title " Searching for Active Network " --infobox "\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Proszę czekać... Por favor espera...\n" 0 0
+  sleep 2
+  
+  # Check to dee if there is already an ethernet connection. If not, then
+  # ask the user to set up wifi
+  while [[ ! $(ping -c 1 google.com) ]]; do
+     dialog --backtitle "$VERSION" --title " Active Network not Detected " --yesno "\nEhternet Connection not detected. Set up Wireless Network Connection?\n\nNOTE: Entering an incorrect wifi password will result in being returned to this screen.\n" 0 0
+     if [[ $? -eq 0 ]];then
+		# Get device name for wireless connection
+		wirenet=$(ip link | grep "wlp" | awk '{print $2}' | sed 's/://')
+		# Stop dhcpcd to use netcl
+		systemctl disable dhcpcd
+		systemctl stop dhcpcd
+		# Make sure wlan network is not already up
+		ip link set $wirenet down >/dev/null 2>&1	
+		wifi-menu
+	else
+	    clear
+	    break
+		exit 1
+    fi
+  done
+  
+  
+  # If there is a connection, then download and execute the installer.
+  if [[ $(ping -c 1 google.com) ]]; then
+	dialog --backtitle "$VERSION" --title " Active Network Detected " --msgbox "\nNetwork Connection Detected. Ready to download the latest ArchAngel Installation Framework from Github.\n" 0 0 
+	clear
+	wget -N https://github.com/EvoLutionLinux/lution-ais/archive/master.zip
+	unzip -o master.zip -d / 
+	/lution-ais-master/lution-ais
+  fi
+  
