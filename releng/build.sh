@@ -2,8 +2,8 @@
 
 set -e -u
 
-iso_name=evolution
-iso_label="archangel-$(date +%Y%m)-64bit"
+iso_name=architect
+iso_label="architect-$(date +%Y%m)-64bit"
 iso_version=$(date +%Y.%m.%d)
 install_dir=arch
 work_dir=work
