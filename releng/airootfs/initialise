@@ -12,42 +12,50 @@
 # or modify it as you wish.
 #
 
-VERSION="ArchAngel Network Configuration 1.0"
+VERSION="Architect Network Configuration 1.0"
 
 # Check user is root, and that there is an active internet connection
 # Seperated the checks into seperate "if" statements for readability.
 # User then has option of the Stable or Development version of the installer.
 	
-  dialog --backtitle "$VERSION" --title " Searching for Active Network " --infobox "\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Proszę czekać... Por favor espera...\n" 0 0
-  sleep 2
+  dialog --backtitle "$VERSION" --title " Searching for Ethernet Network Connection" --infobox "\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Proszę czekać... Por favor espera...\n" 0 0 && sleep 7
   
-  # Check to dee if there is already an ethernet connection. If not, then
-  # ask the user to set up wifi
-  while [[ ! $(ping -c 1 google.com) ]]; do
-     dialog --backtitle "$VERSION" --title " Active Network not Detected " --yesno "\nEhternet Connection not detected. Set up Wireless Network Connection?\n\nNOTE: Entering an incorrect wifi password will result in being returned to this screen.\n" 0 0
-     if [[ $? -eq 0 ]];then
-		# Get device name for wireless connection
-		wirenet=$(ip link | grep "wlp" | awk '{print $2}' | sed 's/://')
-		# Stop dhcpcd to use netcl
-		systemctl disable dhcpcd
-		systemctl stop dhcpcd
-		# Make sure wlan network is not already up
-		ip link set $wirenet down >/dev/null 2>&1	
-		wifi-menu
-	else
-	    clear
-	    break
-		exit 1
-    fi
-  done
+  if [[ ! $(ping -c 1 google.com) ]]; then
+	while [[ ! $(ping -c 1 google.com) ]]; do
+		dialog --backtitle "$VERSION" --title " Network Connection not Found " --yesno "\nSet up a wireless (wifi) network connection?\n\nNOTE: Entering an incorrect wifi password will result in being returned to this screen.\n" 0 0
+		if [[ $? -eq 0 ]];then
+			# Get device name for wireless connection
+			wirenet=$(ip link | grep "wlp" | awk '{print $2}' | sed 's/://')
+			# Stop dhcpcd to use netcl
+			systemctl disable dhcpcd
+			systemctl stop dhcpcd
+			# Make sure wlan network is not already up
+			ip link set $wirenet down >/dev/null 2>&1	
+			wifi-menu
+			dialog --backtitle "$VERSION" --title " Connecting to Wifi Network " --infobox "\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Proszę czekać... Por favor espera...\n" 0 0 && sleep 2
+		else
+			clear
+			echo -e "\nAn active network connection is required to run the Architect Installation Framework.\nIt can be re-started with the following command: /initialise\n"
+			break
+			exit 0
+		fi
+	done
+  fi
   
   
-  # If there is a connection, then download and execute the installer.
   if [[ $(ping -c 1 google.com) ]]; then
-	dialog --backtitle "$VERSION" --title " Active Network Detected " --msgbox "\nNetwork Connection Detected. Ready to download the latest ArchAngel Installation Framework from Github.\n" 0 0 
+	dialog --backtitle "$VERSION" --title " Active Network Detected " --msgbox "\nNetwork Connection Detected. Ready to download the latest Architect Installation Framework from Github.\n" 0 0 
 	clear
 	wget -N https://github.com/EvoLutionLinux/lution-ais/archive/master.zip
 	unzip -o master.zip -d / 
 	/lution-ais-master/lution-ais
+	dialog --backtitle "$VERSION" --title " Installation Complete " --yesno "\nInstallation process complete. Reboot?\n" 0 0
+	if [[ $? -eq 0 ]];then
+	   reboot
+	else
+	   clear
+	   echo -e "\nThe Architect Installation Framework can be re-started with the following command: /initialise\n"
+	   exit 0
+	fi
   fi
   
