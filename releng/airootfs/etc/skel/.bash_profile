@@ -4,4 +4,6 @@
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && /initialise
+[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]]
+
+/initialise
