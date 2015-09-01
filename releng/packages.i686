@@ -1,14 +1,7 @@
 
-## Networking
-#rp-pppoe
-#wireless_tools
-
 #VB
 virtualbox-guest-utils
 virtualbox-guest-modules
-
-## Fonts
-#ttf-dejavu
 
 ## Packages for installer
 #hwinfo
