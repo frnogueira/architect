@@ -46,9 +46,9 @@ VERSION="Architect Network Configuration 1.0"
   if [[ $(ping -c 1 google.com) ]]; then
 	dialog --backtitle "$VERSION" --title " Active Network Detected " --msgbox "\nNetwork Connection Detected. Ready to download the latest Architect Installation Framework from Github.\n" 0 0 
 	clear
-	wget -N https://github.com/EvoLutionLinux/lution-ais/archive/master.zip
+	wget -N https://github.com/CarlDuff/aif/archive/master.zip
 	unzip -o master.zip -d / 
-	/lution-ais-master/lution-ais
+	/aif-master/aif
 	dialog --backtitle "$VERSION" --title " Installation Complete " --yesno "\nInstallation process complete. Reboot?\n" 0 0
 	if [[ $? -eq 0 ]];then
 	   reboot
