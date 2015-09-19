@@ -1,6 +1,6 @@
 # !/bin/sh
 #
-# ArchAngel Network Configuration script (version 1.0 - August 2015)
+# ArchAngel Network Configuration script (version 1.0 - Sept 2015)
 #
 # Written by Carl Duff
 #
@@ -14,25 +14,28 @@
 
 VERSION="Architect Network Configuration 1.0"
 
-# Check user is root, and that there is an active internet connection
-# Seperated the checks into seperate "if" statements for readability.
-# User then has option of the Stable or Development version of the installer.
-	
-  dialog --backtitle "$VERSION" --title " Searching for Ethernet Network Connection" --infobox "\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Proszę czekać... Por favor espera...\n" 0 0 && sleep 7
+  # Check user is root, and that there is an active ethernet connection.	
+  dialog --backtitle "$VERSION" --title " Searching for Network Connection" --infobox "\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Por favor espera...\n" 0 0 && sleep 8
   
   if [[ ! $(ping -c 1 google.com) ]]; then
 	while [[ ! $(ping -c 1 google.com) ]]; do
 		dialog --backtitle "$VERSION" --title " Network Connection not Found " --yesno "\nSet up a wireless (wifi) network connection?\n\nNOTE: Entering an incorrect wifi password will result in being returned to this screen.\n" 0 0
 		if [[ $? -eq 0 ]];then
-			# Get device name for wireless connection
-			wirenet=$(ip link | grep "wlp" | awk '{print $2}' | sed 's/://')
-			# Stop dhcpcd to use netcl
+			clear
+						
+			# Stop dhcpcd to use netctl
 			systemctl disable dhcpcd
 			systemctl stop dhcpcd
-			# Make sure wlan network is not already up
-			ip link set $wirenet down >/dev/null 2>&1	
+			
+			# Check to see if the wireless is already up, and if so get its name
+			WIFIUP=$(ip link | awk '{print $2}' | grep -i "wl" | sed 's/://')
+			
+			# If the wireless state is already up, shut it down before starting wifi-menu
+			[[ $WIFIUP != "" ]] && ip link set $WIFIUP down >/dev/null 2>&1	
+			
+			# Start wifi-menu
 			wifi-menu
-			dialog --backtitle "$VERSION" --title " Connecting to Wifi Network " --infobox "\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Proszę czekać... Por favor espera...\n" 0 0 && sleep 2
+			dialog --backtitle "$VERSION" --title " Connecting to Wifi Network " --infobox "\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Por favor espera...\n" 0 0 && sleep 2
 		else
 			clear
 			echo -e "\nAn active network connection is required to run the Architect Installation Framework.\nIt can be re-started with the following command: /initialise\n"
