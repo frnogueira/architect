@@ -1,11 +1,3 @@
 ##UEFI
-prebootloader
-refind-efi
-
-#VB
-virtualbox-guest-utils
-virtualbox-guest-modules
-
-##packages for installer
-hwinfo
-unzip
+#prebootloader
+#refind-efi
