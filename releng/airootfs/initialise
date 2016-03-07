@@ -17,7 +17,7 @@ VERSION="Architect Network Configuration 1.1"
 OPT="/tmp/.opt"
 echo "" >${OPT}
 WIFI_DEV=$(ip link | awk '{print $2}' | grep -i "wl" | sed 's/://')
-_PlsWait="\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Por favor espera...\n"
+_PlsWait="\nPlease wait... Even geduld aub... Bitte warten... Attendere prego... Vennligst Vent... Por favor espera... Por favor, aguarde...\n"
 
 # Check there is an active ethernet connection. Wait a bit for dhcpcd.
 please_wait() {
@@ -63,7 +63,7 @@ download_aif() {
 
   # Provided there is a connection, then this menu will be available.
   dialog --backtitle "$VERSION" --title " Installer Version " \
-  --menu $"\nPlease choose / Gelieve te kiezen / Bitte wählen / Scegli / Vennligst velg / Por favor elija\n\n1. Stable / stabiel / stabil / stabile / stabilny / estable\n\n2. Development / ontwikkeling / Entwicklung / sviluppo / utvikling / rozwój / desarrollo\n" 20 50 2 \
+  --menu $"\nPlease choose / Gelieve te kiezen / Bitte wählen / Scegli / Vennligst velg / Por favor elija / Favor escolher\n\n1. Stable / Stabiel / Stabil / Stabile / Stabilny / Estable / Estável\n\n2. Development / Ontwikkeling / Entwicklung / Sviluppo / Utvikling / Rozwój / Desarrollo / Desenvolvimento\n" 20 50 2 \
   "1" $"Stable" \
   "2" $"Development" 2>${OPT}
   
@@ -121,7 +121,7 @@ inst_complete() {
 	while [[ ! $(ping -c 1 google.com) ]]; do
 		
 		dialog --backtitle "$VERSION" --title " Network Error " \
-		--menu $"\nPlease choose / Gelieve te kiezen / Bitte wählen / Scegli / Vennligst velg / Por favor elija\n" 0 0 3 \
+		--menu $"\nPlease choose / Gelieve te kiezen / Bitte wählen / Scegli / Vennligst velg / Por favor elija / Favor escolher\n" 0 0 3 \
 		"1" $"Ethernet" \
 		"2" $"Wifi" \
 		"3" $"Exit" 2>${OPT}
